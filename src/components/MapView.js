@@ -17,7 +17,7 @@ const MapView = ({ locations, onDeleteLocation }) => {
     <MapContainer
       style={{ height: '500px', width: '100%' }}
       center={[48.8566, 2.3522]}
-      zoom={8}
+      zoom={6}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
