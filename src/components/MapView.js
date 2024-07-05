@@ -11,9 +11,9 @@ const MapView = ({ locations }) => {
 
   return (
     <MapContainer
-      style={{ height: '400px', width: '100%' }}
+      style={{ height: '600px', width: '100%' }}
       center={[48.8566, 2.3522]}
-      zoom={13}
+      zoom={6}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

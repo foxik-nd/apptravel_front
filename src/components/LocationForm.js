@@ -12,7 +12,7 @@ const LocationForm = ({ onAddLocation }) => {
     setLongitude(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (latitude.trim() === '' || longitude.trim() === '') return;
 
@@ -24,9 +24,30 @@ const LocationForm = ({ onAddLocation }) => {
       return;
     }
 
-    onAddLocation({ latitude: lat, longitude: lon });
-    setLatitude('');
-    setLongitude('');
+    const locationData = { latitude: lat, longitude: lon };
+    console.log('Sending data:', locationData);
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/locations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(locationData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add location');
+      }
+
+      const location = await response.json();
+      console.log('Received response:', location);
+      onAddLocation(location);
+      setLatitude('');
+      setLongitude('');
+    } catch (error) {
+      console.error('Error adding location:', error);
+    }
   };
 
   return (
