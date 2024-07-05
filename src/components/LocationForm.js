@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const LocationForm = ({ onAddLocation }) => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
 
   const handleLatitudeChange = (e) => {
@@ -11,6 +12,10 @@ const LocationForm = ({ onAddLocation }) => {
 
   const handleLongitudeChange = (e) => {
     setLongitude(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
   };
 
   const handleImageChange = (e) => {
@@ -34,7 +39,7 @@ const LocationForm = ({ onAddLocation }) => {
       return;
     }
 
-    const location = { latitude: lat, longitude: lon, image };
+    const location = { latitude: lat, longitude: lon, image, description };
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/locations`, {
@@ -53,6 +58,7 @@ const LocationForm = ({ onAddLocation }) => {
       onAddLocation(addedLocation);
       setLatitude('');
       setLongitude('');
+      setDescription(''); 
       setImage(null);
     } catch (error) {
       console.error(error);
@@ -60,21 +66,33 @@ const LocationForm = ({ onAddLocation }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <form onSubmit={handleSubmit} className='form-container'>
+      <label className='label'>Latitude:</label>
+      <input 
+        className='input'
         type="text"
         value={latitude}
         onChange={handleLatitudeChange}
         placeholder="Entrez la latitude"
       />
+      <label className='label'>Longitude:</label>
       <input
+        className='input'
         type="text"
         value={longitude}
         onChange={handleLongitudeChange}
         placeholder="Entrez la longitude"
       />
-      <input type="file" onChange={handleImageChange} />
-      <button type="submit">Ajouter</button>
+      <label className='label'>Description:</label>
+      <textarea
+        className='input'
+        value={description}
+        onChange={handleDescriptionChange}
+        placeholder="Entrez la description"
+      />
+      <label className='label'>Ajouter une image:</label>
+      <input className='input' type="file" onChange={handleImageChange} />
+      <button className='button' type="submit">Ajouter</button>
     </form>
   );
 };

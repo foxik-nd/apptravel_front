@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import LocationForm from './components/LocationForm';
-import LocationList from './components/LocationList';
+// import LocationList from './components/LocationList';
 import MapView from './components/MapView';
 import 'leaflet/dist/leaflet.css';
+import './App.css';
 
 function App() {
   const [locations, setLocations] = useState([]);
@@ -24,12 +25,25 @@ function App() {
     setLocations((prevLocations) => [...prevLocations, location]);
   };
 
+  const deleteLocation = async (locationId) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/locations/${locationId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete location');
+      }
+      setLocations((prevLocations) => prevLocations.filter(loc => loc._id !== locationId));
+    } catch (error) {
+      console.error('Error deleting location:', error);
+    }
+  };
+
   return (
     <div className="App">
       <h1>TRAVEL APP</h1>
       <LocationForm onAddLocation={addLocation} />
-      <LocationList locations={locations} />
-      <MapView locations={locations} />
+      <MapView locations={locations} onDeleteLocation={deleteLocation} />
     </div>
   );
 }
