@@ -20,11 +20,15 @@ function App() {
     fetchLocations();
   }, []);
 
+  const addLocation = (location) => {
+    setLocations((prevLocations) => [...prevLocations, location]);
+  };
+
   return (
     <div className="App">
       <h1>TRAVEL APP</h1>
-      <LocationForm />
-      <LocationList />
+      <LocationForm onAddLocation={addLocation} />
+      <LocationList locations={locations} />
       <MapView locations={locations} />
     </div>
   );

@@ -1,47 +1,51 @@
 import React, { useState } from 'react';
 
-function LocationForm() {
+const LocationForm = ({ onAddLocation }) => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleLatitudeChange = (e) => {
+    setLatitude(e.target.value);
+  };
+
+  const handleLongitudeChange = (e) => {
+    setLongitude(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/locations`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ latitude, longitude }),
-      });
-      const data = await response.json();
-      console.log(data);
-      setLatitude('');
-      setLongitude('');
-    } catch (error) {
-      console.error('Error adding location:', error);
+    if (latitude.trim() === '' || longitude.trim() === '') return;
+
+    const lat = parseFloat(latitude);
+    const lon = parseFloat(longitude);
+
+    if (isNaN(lat) || isNaN(lon)) {
+      alert('Veuillez entrer des valeurs numériques valides pour la latitude et la longitude.');
+      return;
     }
+
+    onAddLocation({ latitude: lat, longitude: lon });
+    setLatitude('');
+    setLongitude('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
-        type="number"
-        placeholder="Latitude"
+        type="text"
         value={latitude}
-        onChange={(e) => setLatitude(e.target.value)}
-        required
+        onChange={handleLatitudeChange}
+        placeholder="Entrez la latitude"
       />
       <input
-        type="number"
-        placeholder="Longitude"
+        type="text"
         value={longitude}
-        onChange={(e) => setLongitude(e.target.value)}
-        required
+        onChange={handleLongitudeChange}
+        placeholder="Entrez la longitude"
       />
-      <button type="submit">Add Location</button>
+      <button type="submit">Ajouter</button>
     </form>
   );
-}
+};
 
 export default LocationForm;
