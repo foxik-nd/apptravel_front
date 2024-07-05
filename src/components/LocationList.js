@@ -23,6 +23,11 @@ function LocationList() {
         {locations.map((location) => (
           <li key={location._id}>
             Latitude: {location.latitude}, Longitude: {location.longitude}, Timestamp: {new Date(location.timestamp).toLocaleString()}
+            {location.image && (
+              <div>
+                <img src={location.image} alt="Location" width="100" />
+              </div>
+            )}
           </li>
         ))}
       </ul>

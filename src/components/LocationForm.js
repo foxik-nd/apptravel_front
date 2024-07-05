@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const LocationForm = ({ onAddLocation }) => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
+  const [image, setImage] = useState(null);
 
   const handleLatitudeChange = (e) => {
     setLatitude(e.target.value);
@@ -10,6 +11,15 @@ const LocationForm = ({ onAddLocation }) => {
 
   const handleLongitudeChange = (e) => {
     setLongitude(e.target.value);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -24,29 +34,28 @@ const LocationForm = ({ onAddLocation }) => {
       return;
     }
 
-    const locationData = { latitude: lat, longitude: lon };
-    console.log('Sending data:', locationData);
+    const location = { latitude: lat, longitude: lon, image };
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/locations`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(locationData),
+        body: JSON.stringify(location),
       });
 
       if (!response.ok) {
         throw new Error('Failed to add location');
       }
 
-      const location = await response.json();
-      console.log('Received response:', location);
-      onAddLocation(location);
+      const addedLocation = await response.json();
+      onAddLocation(addedLocation);
       setLatitude('');
       setLongitude('');
+      setImage(null);
     } catch (error) {
-      console.error('Error adding location:', error);
+      console.error(error);
     }
   };
 
@@ -64,6 +73,7 @@ const LocationForm = ({ onAddLocation }) => {
         onChange={handleLongitudeChange}
         placeholder="Entrez la longitude"
       />
+      <input type="file" onChange={handleImageChange} />
       <button type="submit">Ajouter</button>
     </form>
   );

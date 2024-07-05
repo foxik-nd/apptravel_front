@@ -11,9 +11,9 @@ const MapView = ({ locations }) => {
 
   return (
     <MapContainer
-      style={{ height: '600px', width: '100%' }}
+      style={{ height: '400px', width: '100%' }}
       center={[48.8566, 2.3522]}
-      zoom={6}
+      zoom={13}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -26,7 +26,14 @@ const MapView = ({ locations }) => {
           icon={customIcon}
         >
           <Popup>
-            Latitude: {location.latitude}, Longitude: {location.longitude}
+            <div>
+              Latitude: {location.latitude}, Longitude: {location.longitude}
+              {location.image && (
+                <div>
+                  <img src={location.image} alt="Location" style={{ width: '100px', height: '100px' }} />
+                </div>
+              )}
+            </div>
           </Popup>
         </Marker>
       ))}
